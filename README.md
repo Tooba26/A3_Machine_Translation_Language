@@ -45,57 +45,39 @@ The dataset for khowar is limited. I took the phrases of Khowar and English from
 | **Additive Attention**      |    0.039        |      1.039           |    9.495              |    13299.507            |
 
 
-
-
-
+## Task 3
 Now that we've trained the translation model using General, Multiplicative, and Additive Attention, evaluated performance using BLEU scores, validation loss, and perplexity, and visualized the attention maps, let's analyze the results.
 
 1️⃣ Comparison of Attention Mechanisms
-Metric	General Attention	Multiplicative Attention	Additive Attention
-BLEU Score (↑)	0.0147	0.0130	0.0130
-Training Time (s) (↓)	1200	1400	1350
-Validation Loss (↓)	9.0	9.3	9.5
-Perplexity (↓)	~8103	~10960	~13310
-🔹 Key Observations:
+Training time was same for all. The training was done using Epochs = 10. (Initially i did 10 epochs. Later when i tried for more epochs then  there was some memory error in puffer)
 
 General Attention performed best across all metrics:
 
-Highest BLEU Score (0.0147) → Best translation accuracy
+Highest BLEU Score (0.0147) → Highest translation accuracy among all
 Lowest Validation Loss (9.0) → More stable training
 Lowest Perplexity (~8103) → Less uncertainty in predictions
 Fastest Training Time (1200s) → More computationally efficient
+
 Multiplicative and Additive Attention had lower BLEU scores and higher perplexity, meaning their translations were less accurate and more uncertain.
 
-2️⃣ Interpreting the BLEU Score Results
-Why are the BLEU scores so low?
-
-BLEU scores typically range from 0 to 1 (higher is better).
-A score below 0.2 indicates poor translations.
-Possible reasons for low BLEU scores:
-Small training dataset → Not enough examples for the model to learn patterns.
-Short or incomplete translations → The model may be outputting very short sequences, leading to lower BLEU scores.
-Tokenization issues → If the vocabulary encoding is not properly aligned, translations will be inaccurate.
-Noisy dataset → If the dataset contains inconsistent translations, the model struggles to learn mappings.
-3️⃣ Understanding the Attention Maps
-General Attention showed clearer alignments between Khowar and English words.
+- General Attention showed clearer alignments between Khowar and English words.
 Multiplicative and Additive Attention had more diffuse, spread-out attention weights, meaning the model was unsure about word alignments.
 Errors in attention mapping could explain the lower BLEU scores and high perplexity for Multiplicative and Additive Attention.
-🔹 Why did General Attention work better?
-
 It directly calculates attention scores using hidden state similarity, making it simpler and computationally efficient.
 Multiplicative and Additive Attention introduce additional weight matrices, which may be harder to optimize with limited training data.
-4️⃣ Recommendations for Improvement
-To improve translation accuracy, we can: ✅ Increase training data size – More examples lead to better generalization.
-✅ Train for more epochs – More training time allows the model to refine translations.
-✅ Use Beam Search decoding – Instead of greedy decoding, use beam search to generate better translations.
-✅ Improve tokenization – Ensure words are correctly segmented for better alignment.
-✅ Use Pre-trained Embeddings – Initialize the model with embeddings trained on a large dataset (e.g., FastText or Word2Vec).
 
-🔹 Conclusion: Which Attention Mechanism is Best?
-📌 General Attention is the best choice for Khowar-to-English translation, given its:
+2) 
+![Validation Loss](/images/Validation_loss.png)
+![Training Loss](/images/train_loss.png)
 
-Higher BLEU Score
-Lower Perplexity
-Faster Training Time
-Better Attention Alignment in Heatmaps
-📌 Multiplicative and Additive Attention require more data and tuning to improve translation quality.
+3) 
+![Attention General](/images/Attention_general.png)
+![Attention Multiplicative](/images/Attention_multi.png)
+![Attention Additive](/images/attention_additive.png)
+
+4) 
+From the results it can be seen that General attention is providing some better perfomrance than Multiplicative and Additive. 
+
+## Task 4
+For the web app i used FastAPI for the backend and ReactJS for frontend. For some styling I used Inline CSS and Material UI.
+The web application interfaces with the machine translation model through a React.js frontend and a FastAPI backend. When a user enters text in English, the frontend sends a POST request to the FastAPI server at the /translate endpoint using axios. The backend processes the request by normalizing the text (converting to lowercase, removing punctuation, and handling Unicode characters) and tokenizing it using NLTK for English and CamelTools for Khowar. The tokenized text is then converted into numerical input using a predefined vocabulary and fed into a PyTorch-based Transformer model. The trained models (General, Multiplicative, and Additive Attention) generate translations, which are decoded back into human-readable text and returned as a JSON response to the frontend. The frontend then dynamically updates the UI to display the translation results in a structured Material-UI table, listing translations from all three models. A loading effect is shown while the translation is being processed. 
