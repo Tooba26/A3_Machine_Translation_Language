@@ -1,0 +1,19 @@
+body {
+    position: relative;
+    background-image: url(../public/mount.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity (0 = transparent, 1 = solid) */
+    z-index: -1; /* Keeps it behind other elements */
+}
